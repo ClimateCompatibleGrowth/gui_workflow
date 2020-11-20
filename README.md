@@ -35,18 +35,24 @@ A YAML file `config.yaml` must be placed in the config directory.
 
 ```yaml
 # Populate the scenarios.csv file with a list of scenario names
-# and path (description optional)
+# and path (description optional) to the model datapackage
 datapackage: config/scenarios.csv
 
 # Tell the workflow which model results to plot
 result_params: config/results.csv
 agg_results: config/agg_results.csv
 
+# Filetype options: 'csv' or 'parquet' or 'feather'
+filetype: csv
+
 # Define the uncertain parameters used to define the Monte Carlo sample
 parameters: config/parameters.csv
 
-# Model version
+# Path to the OSeMOSYS model file
 model_file: ../osemosys/OSeMOSYS_GNU_MathProg/src/osemosys_fast.txt
+
+# Choose a solver, choices: 'cbc' or 'gurobi'
+solver: cbc
 
 # Sampling - how large should the sample be?
 replicates: 100
@@ -63,7 +69,7 @@ DiscountRate,discountrate,"GLOBAL,NGCC",0.05,0.20,unif,None,fixed
 ```
 
 column_name | description
---- | ---
+:-- | :--
 name | the name of the OSeMOSYS parameter file into which the values should be written
 group | the group to which the parameter belonngs (groups of like names are moved together)
 indexes | a string of comma-separated entries matching the set elements for the parameter
@@ -113,6 +119,11 @@ Use these master models to define macro scenarios - e.g. forcing in and out a ke
 ## Running the workflow
 
 To run the workflow, using the command `snakemake --use-conda --cores 4 --resources mem_mb=16000 disk_mb=30000`
+
+You can also change parts of the configuration by adding the `--config` flag, followed by the names of one
+or more of the config items. E.g.
+
+    snakemake --use-conda --cores 4 --config filetype=parquet replicates=100
 
 ## Plotting the workflow
 
